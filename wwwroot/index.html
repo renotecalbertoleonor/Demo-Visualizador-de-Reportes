@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Renotec | Visualizador de Reportes</title>
+    <style>
+        :root {
+            font-family: 'Segoe UI',Arial,sans-serif;
+            color: #14294a;
+            background: #f2f5fa
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0
+        }
+
+        button, input, select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer;
+            border: 0;
+            border-radius: 6px;
+            padding: 11px 16px;
+            font-size: 13px;
+            font-weight: 650
+        }
+
+        aside {
+            width: 196px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            background: #112a4a;
+            color: white;
+            display: flex;
+            flex-direction: column
+        }
+
+        .logo {
+            height: 101px;
+            display: flex;
+            align-items: center;
+            padding: 18px 21px;
+            gap: 9px
+        }
+
+        .symbol {
+            display: flex;
+            align-items: end;
+            gap: 3px;
+            height: 28px
+        }
+
+            .symbol b {
+                display: block;
+                background: #3b8df9;
+                width: 18px
+            }
+
+                .symbol b:nth-child(1) {
+                    height: 7px
+                }
+
+                .symbol b:nth-child(2) {
+                    height: 14px
+                }
+
+                .symbol b:nth-child(3) {
+                    height: 23px
+                }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 750;
+            line-height: 18px
+        }
+
+            .brand small {
+                display: block;
+                letter-spacing: 2px;
+                font-size: 7px;
+                font-weight: 600;
+                margin-top: 5px;
+                color: #bdcfe5
+            }
+
+        nav {
+            padding: 8px 10px;
+            flex: 1
+        }
+
+        .navitem {
+            display: block;
+            width: 100%;
+            color: #c4d5eb;
+            background: transparent;
+            text-align: left;
+            padding: 14px 13px;
+            margin-bottom: 5px
+        }
+
+            .navitem.active {
+                color: #fff;
+                background: linear-gradient(90deg,#1555a8,#3c85d9)
+            }
+
+            .navitem span {
+                margin-right: 12px
+            }
+
+        aside footer {
+            padding: 18px;
+            font-size: 11px;
+            color: #adc2dc;
+            border-top: 1px solid #ffffff22
+        }
+
+        main {
+            margin-left: 196px;
+            min-height: 100vh
+        }
+
+        .top {
+            background: linear-gradient(100deg,#163963,#2f68af);
+            height: 101px;
+            color: #fff;
+            padding: 19px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+            .top h1 {
+                font-size: 22px;
+                margin: 0 0 4px
+            }
+
+            .top p {
+                font-size: 13px;
+                margin: 0;
+                opacity: .85
+            }
+
+            .top .user {
+                font-size: 12px
+            }
+
+        .content {
+            padding: 17px 16px
+        }
+
+        .panel, .stat {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 18px #203b6110
+        }
+
+        .panel {
+            padding: 17px 16px;
+            margin-bottom: 15px
+        }
+
+            .panel h2 {
+                font-size: 15px;
+                margin: 0 0 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+            }
+
+        .subtle {
+            color: #7d8da5;
+            font-size: 11px;
+            font-weight: 400
+        }
+
+        .pill {
+            border-radius: 25px;
+            background: #edf5ff;
+            color: #4b85c9;
+            padding: 7px 13px;
+            font-size: 11px
+        }
+
+        .filtergrid {
+            display: grid;
+            grid-template-columns: repeat(4,minmax(0,1fr));
+            gap: 14px
+        }
+
+            .filtergrid .wide {
+                grid-column: span 2
+            }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            margin: 0 0 6px
+        }
+
+        input, select {
+            width: 100%;
+            height: 35px;
+            padding: 6px 10px;
+            border: 1px solid #d9e0ec;
+            border-radius: 5px;
+            color: #233a56;
+            background: #f8fafd;
+            font-size: 12px
+        }
+
+        .actions {
+            margin-top: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .blue {
+            color: white;
+            background: #2778e4
+        }
+
+        .green {
+            color: white;
+            background: #0caa68
+        }
+
+        .red {
+            color: white;
+            background: #e4324a
+        }
+
+        .grey {
+            background: #e8edf4;
+            color: #365577
+        }
+
+        .status {
+            font-size: 11px;
+            margin-top: 12px;
+            color: #278267;
+            min-height: 14px
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4,minmax(0,1fr));
+            gap: 13px;
+            margin-bottom: 14px
+        }
+
+        .stat {
+            padding: 18px 15px;
+            min-height: 95px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .bubble {
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            background: #e6f1ff;
+            color: #287cea;
+            display: grid;
+            place-items: center;
+            font-size: 21px
+        }
+
+        .stat:nth-child(2) .bubble {
+            background: #e1f8ed;
+            color: #18a86b
+        }
+
+        .stat:nth-child(3) .bubble {
+            background: #fff1db;
+            color: #e6a11b
+        }
+
+        .stat:nth-child(4) .bubble {
+            background: #eee6ff;
+            color: #8661db
+        }
+
+        .stat label {
+            font-size: 12px
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 20px;
+            margin: 7px 0
+        }
+
+        .stat small {
+            color: #778aa4;
+            font-size: 10px
+        }
+
+        .bottom {
+            display: grid;
+            grid-template-columns: minmax(0,2.2fr) minmax(280px,1fr);
+            gap: 13px
+        }
+
+        .tablewrap {
+            overflow: auto;
+            max-height: 390px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap
+        }
+
+        td, th {
+            padding: 11px 8px;
+            text-align: left;
+            font-size: 11px;
+            border-bottom: 1px solid #e8edf4
+        }
+
+        th {
+            background: #eff4f9;
+            color: #435a77;
+            position: sticky;
+            top: 0
+        }
+
+        td {
+            color: #526782
+        }
+
+        .num {
+            text-align: right
+        }
+
+        .chartpanel {
+            min-height: 232px
+        }
+
+        .bars {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            height: 130px;
+            gap: 8px;
+            padding: 15px
+        }
+
+        .bar {
+            width: 25px;
+            border-radius: 3px 3px 0 0;
+            min-height: 3px;
+            background: #2d75e6
+        }
+
+            .bar.credit {
+                background: #22ac80
+            }
+
+        .legend {
+            text-align: center;
+            font-size: 11px;
+            color: #7288a1
+        }
+
+        .mini {
+            font-size: 11px;
+            color: #6e829c;
+            text-align: center
+        }
+
+        .error {
+            color: #c62843
+        }
+
+        .hide {
+            display: none
+        }
+
+        .inform {
+            border-radius: 6px;
+            background: #f2f7ff;
+            color: #40658b;
+            padding: 12px;
+            font-size: 12px
+        }
+
+        @media(max-width:990px) {
+            aside {
+                width: 58px
+            }
+
+            .logo {
+                padding: 10px
+            }
+
+            .brand, nav .txt, aside footer {
+                display: none
+            }
+
+            main {
+                margin-left: 58px
+            }
+
+            .filtergrid {
+                grid-template-columns: repeat(2,1fr)
+            }
+
+            .bottom {
+                grid-template-columns: 1fr
+            }
+
+            .stats {
+                grid-template-columns: repeat(2,1fr)
+            }
+        }
+
+        @media(max-width:600px) {
+            .stats, .filtergrid {
+                grid-template-columns: 1fr
+            }
+
+                .filtergrid .wide {
+                    grid-column: span 1
+                }
+
+            .top h1 {
+                font-size: 17px
+            }
+        }
+    
+/* Tema Renotec actualizado: conserva la distribución adaptativa del piloto. */
+:root{--renotec:#0869bb;--navy:#082246}body{background:#f3f6fc}aside{background:linear-gradient(170deg,#092348,#102f60);width:216px}main{margin-left:216px}.top{height:86px;background:#fff;color:#162f56;border-bottom:1px solid #dae6f6}.top h1{color:#123c75}.top p{color:#5b7294}.logo{height:100px;padding:12px;display:block;text-align:center}.company-logo{display:block;width:100%;height:55px;object-fit:contain;filter:drop-shadow(0 1px 2px #0003)}.logo-caption{font-size:9px;letter-spacing:1.7px;color:#b6d2fa;font-weight:700}.navitem{border-radius:8px}.navitem.active{background:linear-gradient(95deg,#0075dc,#389cff)}.stat{border:1px solid #e8eff8}.stat strong{font-size:19px}.panel{border:1px solid #e6eef9}.chip{display:inline-block;border-radius:20px;padding:4px 10px;background:#e3f6ed;color:#0b8557;font-size:11px}.statline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.dashgrid{display:grid;grid-template-columns:1.6fr 1fr;gap:13px}.dashchart{height:220px;display:flex;align-items:end;gap:9px;padding:25px 12px 9px;border-bottom:1px solid #dce5f0}.dashchart .column{flex:1;min-width:5px;background:linear-gradient(180deg,#359bfa,#166bd0);border-radius:6px 6px 0 0}.dashlabels{display:flex;justify-content:space-around;color:#6983a5;font-size:10px;padding:12px}.dashnote{margin-top:12px;color:#6680a1;font-size:12px}.auth-mask{position:fixed;inset:0;background:linear-gradient(125deg,#051e3e,#075bbb);z-index:20;display:flex;align-items:center;justify-content:center;padding:18px}.auth-card{width:min(430px,100%);background:#fff;border-radius:18px;padding:32px;box-shadow:0 24px 65px #0005}.auth-card img{display:block;max-width:270px;max-height:100px;object-fit:contain;margin:0 auto 10px;background:#10294f;padding:10px;border-radius:10px}.auth-card h2{text-align:center;margin:8px 0 4px}.auth-card p{text-align:center;font-size:12px;color:#607591}.auth-card input{height:42px;margin-bottom:15px}.auth-card button{width:100%}.tablewrap.userstable{max-height:450px}.passbtn{background:#ebf3ff;color:#1558a7}.nav-username{font-weight:700}#userForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:15px 0}#userForm button{align-self:end}#userForm label{font-size:12px}.pageh{display:flex;align-items:center;justify-content:space-between;gap:12px}button:disabled{opacity:.55;cursor:not-allowed}@media(max-width:990px){aside{width:64px}.logo-caption,.company-logo{display:none}main{margin-left:64px}.dashgrid{grid-template-columns:1fr}.statline{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.statline,#userForm{grid-template-columns:1fr}}
+
+/* DASHBOARD SQUARE ONE 2026: estilos aislados de la pantalla de inicio */
+.sq-dashboard{color:#14294a}.sq-dashboard .sq-summary-header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px;padding:6px 2px}.sq-dashboard .sq-eyebrow{display:block;color:#3078bd;font-size:10px;letter-spacing:1.2px;font-weight:750;margin-bottom:6px}.sq-dashboard .sq-summary-header h2{font-size:24px;margin:0 0 5px}.sq-dashboard .sq-summary-header p{margin:0;font-size:12px;color:#617899}.sq-dashboard .sq-refresh{white-space:nowrap}
+.sq-dashboard .sq-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:16px}.sq-dashboard .sq-kpi{background:#fff;border:1px solid #e6edf8;box-shadow:0 3px 16px #142d5310;border-radius:12px;padding:22px 17px;display:flex;align-items:center;gap:12px;min-width:0}.sq-dashboard .sq-kpi-icon{width:46px;height:46px;flex:none;display:grid;place-items:center;font-size:25px;border-radius:50%}.sq-dashboard .sq-blue{color:#1686ef;background:#e7f3ff}.sq-dashboard .sq-green{color:#13a76b;background:#e2f8ee}.sq-dashboard .sq-orange{color:#d78b11;background:#fff1d8}.sq-dashboard .sq-purple{color:#8148e0;background:#f0e7ff}.sq-dashboard .sq-kpi small{display:block;font-size:12px;font-weight:750;color:#253d60}.sq-dashboard .sq-kpi strong{font-size:clamp(17px,1.65vw,24px);display:block;margin:8px 0 5px;overflow-wrap:anywhere}.sq-dashboard .sq-kpi span{font-size:11px;color:#6a7f9a}
+.sq-dashboard .sq-main-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(360px,1fr);gap:15px;margin-bottom:15px}.sq-dashboard .sq-bottom-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(210px,.76fr) minmax(210px,.76fr);gap:15px}.sq-dashboard .sq-panel{min-width:0;background:#fff;border-radius:12px;border:1px solid #e5eef8;padding:19px 18px;box-shadow:0 3px 15px #163f7310}.sq-dashboard .sq-panel h3{font-size:16px;margin:0 0 17px;color:#132c50}.sq-dashboard .sq-hint{font-size:10px;color:#7990a9;font-weight:400;display:block;margin-top:5px}.sq-dashboard .sq-legend{display:flex;justify-content:flex-end;gap:20px;color:#425879;font-size:11px}.sq-dashboard .sq-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}.sq-dashboard .sq-plot{height:285px;width:100%;min-width:0}.sq-dashboard .sq-plot svg{width:100%;height:100%;display:block}.sq-dashboard .sq-empty{color:#7d91a9;font-size:12px;padding:25px 8px}.sq-dashboard .sq-caption{font-size:10px;color:#7187a5;line-height:1.6;margin:15px 0 0}.sq-dashboard .sq-donut-layout{display:grid;grid-template-columns:185px minmax(0,1fr);align-items:center;gap:17px;min-height:300px}.sq-dashboard .sq-donut{width:180px;height:180px;border-radius:50%;display:grid;place-items:center;background:#e7effa}.sq-dashboard .sq-donut-center{width:114px;height:114px;border-radius:50%;background:white;display:flex;justify-content:center;align-items:center;flex-direction:column;text-align:center}.sq-dashboard .sq-donut-center small{font-size:10px;color:#6b7c95}.sq-dashboard .sq-donut-center strong{font-size:17px;margin-top:4px}.sq-dashboard .sq-donut-list{display:flex;flex-direction:column;gap:11px;min-width:0}.sq-dashboard .sq-donut-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:7px;align-items:center;font-size:11px}.sq-dashboard .sq-donut-row i{display:block;width:10px;height:10px;border-radius:50%}.sq-dashboard .sq-donut-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sq-dashboard .sq-donut-row b{color:#607894}.sq-dashboard .sq-account-list{display:flex;flex-direction:column;gap:15px}.sq-dashboard .sq-account-row{display:grid;grid-template-columns:24px 110px minmax(0,1fr) minmax(105px,auto) 45px;align-items:center;gap:9px;font-size:11px}.sq-dashboard .sq-account-rank{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:#e9f1fb;font-weight:700}.sq-dashboard .sq-account-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:650}.sq-dashboard .sq-account-track{height:12px;background:#edf2fa;border-radius:8px;overflow:hidden}.sq-dashboard .sq-account-progress{height:100%;border-radius:8px}.sq-dashboard .sq-account-value{text-align:right;font-weight:650}.sq-dashboard .sq-account-pct{text-align:right;color:#6d81a0}.sq-dashboard .sq-origin{display:grid;grid-template-columns:90px 1fr;gap:8px;margin-bottom:9px;align-items:center;font-size:11px}.sq-dashboard .sq-origin span,.sq-dashboard .sq-origin b{padding:11px 10px;border-radius:6px;background:#f0f6fe}.sq-dashboard .sq-origin span{color:#607b9c;font-weight:500}.sq-dashboard .sq-origin b{color:#1d477d;overflow-wrap:anywhere}.sq-dashboard .sq-operation{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid #e6edf6}.sq-dashboard .sq-operation b,.sq-dashboard .sq-operation small{display:block;font-size:11px}.sq-dashboard .sq-operation small{color:#6e86a5;margin-top:4px}.sq-dashboard .sq-status-icon{display:grid;place-items:center;background:#e5f6ed;color:#11995e;min-width:28px;height:28px;border-radius:50%}
+@media(max-width:1300px){.sq-dashboard .sq-main-grid{grid-template-columns:1fr}.sq-dashboard .sq-bottom-grid{grid-template-columns:1fr 1fr}.sq-dashboard .sq-bottom-grid>:first-child{grid-column:span 2}}@media(max-width:870px){.sq-dashboard .sq-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.sq-dashboard .sq-bottom-grid{grid-template-columns:1fr}.sq-dashboard .sq-bottom-grid>:first-child{grid-column:auto}}@media(max-width:600px){.sq-dashboard .sq-kpis{grid-template-columns:1fr}.sq-dashboard .sq-summary-header{flex-direction:column;align-items:stretch}.sq-dashboard .sq-main-grid{display:block}.sq-dashboard .sq-main-grid .sq-panel{margin-bottom:14px}.sq-dashboard .sq-donut-layout{grid-template-columns:1fr;justify-items:center}.sq-dashboard .sq-donut-list{width:100%}.sq-dashboard .sq-account-row{grid-template-columns:20px 70px minmax(0,1fr);gap:6px}.sq-dashboard .sq-account-value,.sq-dashboard .sq-account-pct{display:none}}
+
+/* Secciones exclusivas: solo una pantalla visible por vez. */
+#dashboardpage.hide, #reportpage.hide, #userspage.hide { display:none !important; }
+</style>
+</head>
+<body>
+    <aside><div class="logo"><img class="company-logo" src="/renotec-logo.png" alt="Renotec Soluciones"><div class="logo-caption">VISUALIZADOR DE REPORTES</div></div><nav><button class="navitem active" data-page="dashboard"><span>⌂</span><span class="txt">Dashboard</span></button><button class="navitem" data-page="reports"><span>▤</span><span class="txt">Reportes</span></button><button class="navitem" id="usersNav" data-page="users"><span>♙</span><span class="txt">Usuarios y Roles</span></button></nav><footer>Renotec · Visualizador de Reportes<br>Solo lectura de datos</footer></aside>
+    <main><header class="top"><div><h1 id="headerTitle">Dashboard</h1><p>Renotec Visualizador de Reportes · Square One</p></div><div class="user"><span id="currentUser">Acceso directo</span></div></header><div class="content">
+    <section id="dashboardpage" class="sq-dashboard">
+      <div class="sq-summary-header"><div><span class="sq-eyebrow">VISUALIZADOR DE REPORTES · SQUARE ONE</span><h2>Resumen financiero</h2><p>Resumen consolidado de las tres vistas de cuadre. Los filtros están en Reportes.</p></div><button id="dashRefresh" class="blue sq-refresh" type="button">↻ &nbsp; Actualizar datos</button></div>
+      <div class="sq-kpis">
+        <article class="sq-kpi"><div class="sq-kpi-icon sq-blue">▤</div><div><small>Registros consultados</small><strong id="dashCount">—</strong><span>Filas obtenidas de la consulta</span></div></article>
+        <article class="sq-kpi"><div class="sq-kpi-icon sq-green">↘</div><div><small>Débito</small><strong id="dashDebit">—</strong><span>Cuadres</span></div></article>
+        <article class="sq-kpi"><div class="sq-kpi-icon sq-orange">↗</div><div><small>Crédito</small><strong id="dashCredit">—</strong><span>Cuadres</span></div></article>
+        <article class="sq-kpi"><div class="sq-kpi-icon sq-purple">≋</div><div><small>Saldo neto</small><strong id="dashBalance">—</strong><span>Crédito − Débito</span></div></article>
+      </div>
+      <div class="sq-main-grid">
+        <article class="sq-panel sq-trend"><h3>Comparativa de importes por cuenta <span class="sq-hint">Débito y Crédito · cuentas principales</span></h3><div class="sq-legend"><span><i class="sq-dot" style="background:#1686ef"></i>Débito</span><span><i class="sq-dot" style="background:#8748f5"></i>Crédito</span></div><div id="dashLines" class="sq-plot"><div class="sq-empty">Actualiza el Dashboard para consultar datos reales.</div></div><p class="sq-caption">Comparación por cuentas, no tendencia temporal. La API actual no devuelve series por fecha.</p></article>
+        <article class="sq-panel sq-donut-panel"><h3>Distribución por cuenta</h3><div class="sq-donut-layout"><div class="sq-donut" id="dashDonut"><div class="sq-donut-center"><small>Total importes</small><strong id="dashDonutTotal">—</strong></div></div><div class="sq-donut-list" id="dashDonutLegend"><span class="sq-empty">Sin datos disponibles.</span></div></div></article>
+      </div>
+      <div class="sq-bottom-grid">
+        <article class="sq-panel"><h3>Cuentas principales</h3><div id="dashAccounts" class="sq-account-list"><div class="sq-empty">Consulta los datos para mostrar las cuentas principales.</div></div></article>
+        <article class="sq-panel"><h3>Origen de los datos</h3><div class="sq-origin"><span>Tienda</span><b>SQUARE ONE</b></div><div class="sq-origin"><span>Vistas</span><b>Principal · SC · SG</b></div><div class="sq-origin"><span>Acceso</span><b>Solo lectura</b></div><p class="sq-caption">Consolidado de las tres vistas, sin modificar el integrador. Si hay registros compartidos entre vistas, se contabilizan en cada una.</p></article>
+        <article class="sq-panel"><h3>Resumen operativo</h3><div class="sq-operation"><span class="sq-status-icon">✓</span><div><b>Consulta de datos</b><small id="dashOperational">Pendiente de actualizar.</small></div></div><div class="sq-operation"><span class="sq-status-icon">▤</span><div><b>Total de registros</b><small id="dashOperationsRows">—</small></div></div><div class="sq-operation"><span class="sq-status-icon">⌁</span><div><b>Vista utilizada</b><small>Principal · SC · SG</small></div></div><p class="sq-caption" id="dashMessage">Pulsa Actualizar datos para consultar SQL Server.</p></article>
+      </div>
+    </section>
+<section id="reportpage" class="hide" hidden style="display:none!important"><div class="panel"><h2>⚲ &nbsp; Filtros de consulta <span class="pill">Fuentes habilitadas: 3 vistas</span></h2><div class="filtergrid"><div><label>Tienda</label><select id="store"><option>SQUARE ONE</option></select></div><div><label>Vista / Tabla</label><select id="view"><option value="View_Cuadre_0.1">[dbo].[View_Cuadre_0.1]</option><option value="View_Cuadre_0.1_SC">[dbo].[View_Cuadre_0.1_SC]</option><option value="View_Cuadre_0.1_SG">[dbo].[View_Cuadre_0.1_SG]</option></select></div><div><label>Fecha desde</label><input id="from" type="date"></div><div><label>Fecha hasta</label><input id="to" type="date"></div><div><label>IDEmpleado</label><input id="employee" placeholder="Ej. 1025"></div><div><label>Cuenta</label><input id="account" placeholder="Ej. 1101"></div><div class="wide"><label>Nombre empleado</label><input id="employeeName" placeholder="Buscar empleado..."></div><div><label>Presentación</label><select id="groupBy"><option value="account" selected>Totales por cuenta</option><option value="employeeAccount">Totales por empleado y cuenta</option><option value="employee">Totales por empleado</option><option value="detail">Detalle de registros</option></select></div></div><div class="actions"><button class="blue" id="search">⌕ &nbsp; Consultar</button><button class="grey" id="clear">↻ &nbsp; Limpiar</button><button class="green" id="excel">▦ &nbsp; Exportar Excel</button><button class="red" id="pdf">▤ &nbsp; Exportar PDF</button></div><div id="notice" class="status">Selecciona los filtros y pulsa Consultar.</div></div><div class="stats"><div class="stat"><div class="bubble">▤</div><div><label>Total Débito</label><strong id="debit">—</strong><small>Período seleccionado</small></div></div><div class="stat"><div class="bubble">▤</div><div><label>Total Crédito</label><strong id="credit">—</strong><small>Período seleccionado</small></div></div><div class="stat"><div class="bubble">⚖</div><div><label>Saldo Neto</label><strong id="balance">—</strong><small>Crédito − Débito</small></div></div><div class="stat"><div class="bubble">▣</div><div><label>Registros</label><strong id="count">—</strong><small>Resultados filtrados</small></div></div></div><div class="bottom"><div class="panel"><h2>▦ &nbsp; Resultados del reporte <span id="summary" class="subtle"></span></h2><div class="tablewrap"><table><thead><tr><th>Fecha / período</th><th>Tienda</th><th>Vista</th><th>IDEmpleado</th><th>NombreEmpleado</th><th>Cuenta</th><th class="num">Débito</th><th class="num">Crédito</th><th class="num">Saldo</th></tr></thead><tbody id="rows"><tr><td colspan="9">Realiza una consulta para mostrar los resultados.</td></tr></tbody></table></div></div><div><div class="panel chartpanel"><h2>▥ &nbsp; Total por Vista</h2><div class="bars"><div id="barDebit" class="bar" style="height:0"></div><div id="barCredit" class="bar credit" style="height:0"></div></div><div class="legend">🔵 Débito &nbsp; 🟢 Crédito</div><div class="mini" id="viewcaption">Vista seleccionada</div></div><div class="panel chartpanel"><h2>⌁ &nbsp; Tendencia de Saldos</h2><div id="trend" class="inform">Consulta datos para visualizar los totales del período.</div></div></div></div></section><section id="userspage" class="hide" hidden style="display:none!important"><div class="panel"><div class="pageh"><h2>Usuarios y Roles</h2><span class="pill">Administración del visualizador</span></div><div id="userNotice" class="status"></div><div id="userEditor"><h2>Crear o editar usuario</h2><form id="userForm"><div><label>Nombre completo</label><input required id="uName" maxlength="150"></div><div><label>Usuario</label><input required id="uUsername" maxlength="60"></div><div><label>Correo electrónico</label><input required type="email" id="uEmail" maxlength="150"></div><div><label>Rol</label><select id="uRole"></select></div><div><label>Contraseña (dejar vacía al editar para conservar)</label><input id="uPassword" type="password" autocomplete="new-password" minlength="12"></div><div><label>Estado</label><select id="uActive"><option value="true">Activo</option><option value="false">Inactivo</option></select></div><button class="blue" type="submit">Guardar usuario</button><button class="grey" type="button" id="resetUser">Nuevo usuario</button></form></div><h2>Usuarios registrados</h2><div class="tablewrap userstable"><table><thead><tr><th>Nombre</th><th>Usuario</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th>Acciones</th></tr></thead><tbody id="userRows"></tbody></table></div></div><div class="panel"><h2>Permisos</h2><p class="inform">Administrador: Dashboard, reportes, exportación y usuarios. Analista: Dashboard, reportes y exportación. Solo Lectura: Dashboard y reportes.</p></div></section>
+    </div></main>
+    <script>
+const $=id=>document.getElementById(id),money=n=>'RD$'+Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let last=null;
+function getParams(){let q=new URLSearchParams();['view','from','to','account','groupBy'].forEach(k=>{if($(k).value)q.set(k,$(k).value)});q.set('employee',$('employee').value.trim()||$('employeeName').value.trim());return q}
+function display(j){last=j;$('debit').textContent=money(j.totals.debit);$('credit').textContent=money(j.totals.credit);$('balance').textContent=money(j.totals.credit-j.totals.debit);$('count').textContent=j.sourceRows.toLocaleString();$('summary').textContent=j.returnedRows+' resultados agrupados / mostrados ('+({'account':'Por cuenta','employeeaccount':'Empleado y cuenta','employee':'Por empleado','detail':'Detalle'}[String(j.groupBy||'').toLowerCase()]||'Reporte')+')';let view={'View_Cuadre_0.1':'Principal','View_Cuadre_0.1_SC':'SC','View_Cuadre_0.1_SG':'SG'}[j.view]||j.view;let label=($('from').value||'—')+( $('to').value&&$('to').value!==$('from').value?' a '+$('to').value:'');$('rows').innerHTML=j.rows.length?j.rows.map(x=>`<tr><td>${esc(label)}</td><td>SQUARE ONE</td><td>${esc(view)}</td><td>${esc(x.employeeId)}</td><td>${esc(x.employee)}</td><td>${esc(x.account)}</td><td class="num">${money(x.debit)}</td><td class="num">${money(x.credit)}</td><td class="num">${money(x.balance)}</td></tr>`).join(''):'<tr><td colspan="9">Sin resultados para los filtros seleccionados.</td></tr>';let high=Math.max(j.totals.debit,j.totals.credit,1);$('barDebit').style.height=Math.round(120*j.totals.debit/high)+'px';$('barCredit').style.height=Math.round(120*j.totals.credit/high)+'px';$('viewcaption').textContent=view;$('trend').textContent='Saldo neto del período: '+money(j.totals.credit-j.totals.debit);$('notice').textContent='Consulta completada: '+j.sourceRows+' registros. '+(j.warnings||[]).join(' ');$('notice').classList.remove('error')}
+async function load(){let btn=$('search');btn.disabled=true;$('notice').textContent='Consultando SQL Server...';try{let r=await fetch('/api/report?'+getParams());let j=await r.json();if(!r.ok)throw Error(j.error||j.detail||'Error HTTP '+r.status);display(j)}catch(e){$('notice').textContent=e.message;$('notice').classList.add('error')}finally{btn.disabled=false}}
+async function exportReport(fmt){$('notice').textContent='Preparando exportación...';try{let r=await fetch('/api/export/'+fmt+'?'+getParams());if(!r.ok){let j=await r.json();throw Error(j.error||j.detail||'Error HTTP '+r.status)}let blob=await r.blob(),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Renotec_SquareOne_'+new Date().toISOString().slice(0,10)+'.'+fmt;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);$('notice').textContent='Exportación completada.'}catch(e){$('notice').textContent=e.message;$('notice').classList.add('error')}}
+$('groupBy').addEventListener('change',()=>{if(last)load();});$('search').onclick=load;$('excel').onclick=()=>exportReport('xlsx');$('pdf').onclick=()=>exportReport('pdf');$('clear').onclick=()=>{['employee','employeeName','account','from','to'].forEach(k=>$(k).value='');$('groupBy').value='account';$('notice').textContent='Filtros restablecidos.'};
+// Navegacion directa sin login; usuarios solo desde localhost.
+let editingId=null, roles=[], users=[], canManageUsers=false;
+// Una sola sección visible en cada momento; la propiedad inline evita conflictos CSS.
+function page(p){
+  if(p==='users'&&!canManageUsers)return;
+  const sections={dashboard:$('dashboardpage'),reports:$('reportpage'),users:$('userspage')};
+  if(!sections[p])return;
+  Object.entries(sections).forEach(([name,element])=>{
+    const visible=name===p;
+    element.classList.toggle('hide',!visible);
+    element.hidden=!visible;
+    element.style.setProperty('display',visible?'block':'none','important');
+  });
+  document.querySelectorAll('[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===p));
+  $('headerTitle').textContent={dashboard:'Dashboard',reports:'Reportes',users:'Usuarios y Roles'}[p];
+  if(p==='users')loadUsers();
+  // RRV_AUTO_DASHBOARD_V1
+  if(p==='dashboard') { const b=document.getElementById('dashRefresh'); if(b && !b.disabled) b.click(); }
+}
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>page(b.dataset.page));
+async function api(url,opts={}){
+  let r=await fetch(url,{credentials:'same-origin',...opts,headers:{'Content-Type':'application/json',...(opts.headers||{})}});
+  let j=await r.json().catch(()=>({}));
+  if(!r.ok)throw Error(j.error||j.detail||'Error HTTP '+r.status);
+  return j;
+}
+async function startWithoutLogin(){
+  try{const r=await api('/api/access/local');canManageUsers=!!r.userManagement;}
+  catch(e){canManageUsers=false;}
+  $('usersNav').classList.toggle('hide',!canManageUsers);
+  $('currentUser').textContent=canManageUsers?'Acceso local':'Visualizador de reportes';
+  $('excel').disabled=false;$('pdf').disabled=false;
+  page('dashboard');
+}
+// Dashboard: representa solo datos reales devueltos por /api/report; no inventa serie temporal.
+const sqColors=['#1e88f5','#49a2f8','#35c88a','#ffb443','#8758f2','#d052e8','#ef658d','#f28f3b'];
+function sqCompact(n){n=Math.abs(Number(n)||0);return n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1000?(n/1000).toFixed(1)+'K':String(Math.round(n))}
+function sqChart(rows){
+ const d=rows.slice(0,8).map(r=>({name:String(r.account||'Cuenta'),debit:Math.abs(Number(r.debit)||0),credit:Math.abs(Number(r.credit)||0)}));
+ if(!d.length){$('dashLines').innerHTML='<div class="sq-empty">Sin cuentas para representar.</div>';return}
+ const max=Math.max(1,...d.flatMap(r=>[r.debit,r.credit]));const W=760,H=280,L=62,R=15,T=16,B=47,w=W-L-R,h=H-T-B;
+ const x=i=>L+(d.length===1?w/2:(i*w/(d.length-1)));const y=v=>T+h-(v/max)*h;
+ const ns='http://www.w3.org/2000/svg';const el=(tag,attrs,text)=>{const n=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs||{}))n.setAttribute(k,String(v));if(text!==undefined)n.textContent=text;return n};
+ const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Importes de débito y crédito por cuenta'});
+ for(let i=0;i<=4;i++){let val=max*i/4,Y=y(val);svg.append(el('line',{x1:L,y1:Y,x2:W-R,y2:Y,stroke:'#e2ebf5','stroke-dasharray':'4 4'}));svg.append(el('text',{x:L-8,y:Y+4,'text-anchor':'end',fill:'#7890ab','font-size':11},sqCompact(val)))}
+ d.forEach((r,i)=>svg.append(el('text',{x:x(i),y:H-22,'text-anchor':'middle',fill:'#667e9c','font-size':10},r.name.slice(0,12))));
+ for(const [field,color] of [['debit','#1686ef'],['credit','#8748f5']]){const path=d.map((r,i)=>(i?'L':'M')+x(i).toFixed(2)+' '+y(r[field]).toFixed(2)).join(' ');svg.append(el('path',{d:path,fill:'none',stroke:color,'stroke-width':3,'stroke-linejoin':'round','stroke-linecap':'round'}));d.forEach((r,i)=>{let c=el('circle',{cx:x(i),cy:y(r[field]),r:4.5,fill:color,stroke:'white','stroke-width':1.5});c.append(el('title',{},`${r.name}: ${money(r[field])}`));svg.append(c)})}
+ $('dashLines').replaceChildren(svg);
+}
+function sqWidgets(rows){
+ const items=rows.map(r=>({name:String(r.account||'Cuenta'),value:Math.abs(Number(r.debit)||0)+Math.abs(Number(r.credit)||0)})).filter(r=>r.value>0).sort((a,b)=>b.value-a.value);
+ const total=items.reduce((sum,r)=>sum+r.value,0);$('dashDonutTotal').textContent=total?'RD$'+sqCompact(total):'—';
+ const top=items.slice(0,8);const other=items.slice(8).reduce((sum,r)=>sum+r.value,0);if(other)top.push({name:'Otras cuentas',value:other});
+ if(!total){$('dashDonut').style.background='#e7effa';$('dashDonutLegend').textContent='Sin datos.';$('dashAccounts').textContent='Sin datos.';return}
+ let pct=0;const segments=top.map((r,i)=>{let prev=pct;pct+=r.value/total*100;return `${sqColors[i%sqColors.length]} ${prev.toFixed(3)}% ${pct.toFixed(3)}%`});$('dashDonut').style.background='conic-gradient('+segments.join(',')+')';
+ $('dashDonutLegend').innerHTML=top.map((r,i)=>`<div class="sq-donut-row"><i style="background:${sqColors[i%sqColors.length]}"></i><span title="${esc(r.name)}">${esc(r.name)}</span><b>${(r.value/total*100).toFixed(1)}%</b></div>`).join('');
+ $('dashAccounts').innerHTML=items.slice(0,5).map((r,i)=>`<div class="sq-account-row"><span class="sq-account-rank">${i+1}</span><span class="sq-account-name" title="${esc(r.name)}">${esc(r.name)}</span><div class="sq-account-track"><div class="sq-account-progress" style="width:${(r.value/items[0].value*100).toFixed(2)}%;background:${sqColors[i%sqColors.length]}"></div></div><b class="sq-account-value">${money(r.value)}</b><span class="sq-account-pct">${(r.value/total*100).toFixed(1)}%</span></div>`).join('');
+}
+$('dashRefresh').onclick=async()=>{
+ let btn=$('dashRefresh'),note=$('dashMessage');btn.disabled=true;note.textContent='Consultando SQL Server...';
+ try{
+  const j=await api('/api/dashboard/summary');
+  $('dashCount').textContent=Number(j.sourceRows||0).toLocaleString('en-US');$('dashDebit').textContent=money(j.totals.debit);$('dashCredit').textContent=money(j.totals.credit);$('dashBalance').textContent=money(j.totals.credit-j.totals.debit);
+  const rows=Array.isArray(j.rows)?j.rows:[];const sorted=[...rows].sort((a,b)=>(Math.abs(Number(b.credit)||0)+Math.abs(Number(b.debit)||0))-(Math.abs(Number(a.credit)||0)+Math.abs(Number(a.debit)||0)));
+  sqChart(sorted);sqWidgets(sorted);$('dashOperationsRows').textContent=Number(j.sourceRows||0).toLocaleString('en-US')+' registros';$('dashOperational').textContent='Consulta completada';
+  let warnings=j.warnings||[];note.textContent=Number(j.sourceRows||0).toLocaleString('en-US')+' registros consolidados en 3 vistas. '+(j.note||'');
+ }catch(e){note.textContent='Error al consultar: '+e.message;$('dashOperational').textContent='No se pudo actualizar';}finally{btn.disabled=false}
+};
+async function loadUsers(){try{let j=await api('/api/users');users=j.users;roles=j.roles;$('uRole').innerHTML=roles.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');$('userRows').innerHTML=users.map(u=>`<tr><td>${esc(u.fullName)}</td><td>${esc(u.username)}</td><td>${esc(u.email)}</td><td>${esc(u.role)}</td><td><span class="chip">${u.isActive?'Activo':'Inactivo'}</span></td><td>${esc(u.lastLoginAt||'—')}</td><td><button class="grey" type="button" data-edit="${u.id}">Editar</button></td></tr>`).join('');document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editUser(Number(b.dataset.edit)))}catch(e){$('userNotice').textContent=e.message}}
+function editUser(id){let u=users.find(x=>x.id===id);if(!u)return;editingId=id;$('uName').value=u.fullName;$('uUsername').value=u.username;$('uEmail').value=u.email;$('uRole').value=u.roleId;$('uActive').value=String(u.isActive);$('uPassword').value='';$('uUsername').readOnly=true}
+function resetUser(){editingId=null;$('userForm').reset();$('uUsername').readOnly=false}
+$('resetUser').onclick=resetUser;
+$('userForm').onsubmit=async e=>{e.preventDefault();try{let payload={fullName:$('uName').value,username:$('uUsername').value,email:$('uEmail').value,roleId:Number($('uRole').value),isActive:$('uActive').value==='true',password:$('uPassword').value};await api(editingId?'/api/users/'+editingId:'/api/users',{method:editingId?'PUT':'POST',body:JSON.stringify(payload)});$('userNotice').textContent='Usuario guardado correctamente.';resetUser();await loadUsers()}catch(e){$('userNotice').textContent=e.message}};
+page('dashboard');
+startWithoutLogin();
+
+    </script>
+</body>
+</html>
